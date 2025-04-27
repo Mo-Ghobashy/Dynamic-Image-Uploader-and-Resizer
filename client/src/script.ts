@@ -1,97 +1,99 @@
-type ImageFile = string
+const gallery = document.getElementById("gallery");
+const form = document.getElementById("resizeForm") as HTMLFormElement;
+const uploadForm = document.getElementById("uploadForm") as HTMLFormElement;
+const fileInput = document.getElementById("imageInput") as HTMLInputElement;
 
-const gallery = document.getElementById('gallery')
-const form = document.getElementById('resizeForm') as HTMLFormElement
-const uploadForm = document.getElementById('uploadForm') as HTMLFormElement
-const fileInput = document.getElementById('imageInput') as HTMLInputElement
+let fileName: string = "";
 
-let fileName: string = ''
+form?.addEventListener("submit", (event: Event) => {
+  event.preventDefault();
+  const url: string = createUrl();
+  const urlInput = document.getElementById("urlInput") as HTMLInputElement;
+  urlInput.value = url;
+  document.getElementById("generatedLink")?.classList.remove("hidden");
+});
 
-form?.addEventListener('submit', () => {
-  const url: string = createUrl()
-  const urlInput = document.getElementById('urlInput') as HTMLInputElement
-  urlInput.value = url
-  document.getElementById('generatedLink')?.classList.remove('hidden')
-})
+uploadForm?.addEventListener("submit", async (event: Event) => {
+  event.preventDefault();
 
-uploadForm?.addEventListener('submit', async (event: Event) => {
-  event.preventDefault()
-
-  const file: File | undefined = fileInput.files?.[0]
+  const file: File | undefined = fileInput.files?.[0];
   if (!file) {
-    alert('Please select a file first!')
-    return
+    alert("Please select a file first!");
+    return;
   }
 
-  const formData = new FormData()
-  formData.append('image', file)
+  const formData = new FormData();
+  formData.append("image", file);
 
   try {
-    const res: Response = await fetch('http://localhost:3000/images/upload', {
-      method: 'POST',
+    const res: Response = await fetch("http://localhost:3000/images/upload", {
+      method: "POST",
       body: formData,
-    })
+    });
 
-    const data: unknown = await res.json()
-    console.log('Upload success:', data)
+    const data: unknown = await res.json();
+    console.log("Upload success:", data);
   } catch (err) {
-    console.error('Upload failed:', err)
+    console.error("Upload failed:", err);
   }
-})
+});
+/** @type {HTMLButtonElement} onClick handler */
 
 function copyUrl(): void {
-  const urlInput = document.getElementById('urlInput') as HTMLInputElement
-  urlInput?.select()
-  document.execCommand('copy')
-  alert('URL copied!')
+  const urlInput = document.getElementById("urlInput") as HTMLInputElement;
+  urlInput?.select();
+  document.execCommand("copy");
+  alert("URL copied!");
 }
 
 function openResizeForm(imgName: string): void {
-  fileName = imgName
-  const overlay = document.getElementById('overlay')
-  const resizeForm = document.getElementById('resizeForm')
+  fileName = imgName;
+  const overlay = document.getElementById("overlay");
+  const resizeForm = document.getElementById("resizeForm");
   if (overlay && resizeForm) {
-    overlay.style.display = 'block'
-    resizeForm.style.display = 'block'
+    overlay.style.display = "block";
+    resizeForm.style.display = "block";
   }
 }
-
+/** @type {HTMLButtonElement} onClick handler */
 function closeResizeForm(): void {
-  const overlay = document.getElementById('overlay')
-  const resizeForm = document.getElementById('resizeForm')
+  const overlay = document.getElementById("overlay");
+  const resizeForm = document.getElementById("resizeForm");
   if (overlay && resizeForm) {
-    overlay.style.display = 'none'
-    resizeForm.style.display = 'none'
+    overlay.style.display = "none";
+    resizeForm.style.display = "none";
   }
 }
 
 function createUrl(): string {
-  const heightInput = document.getElementById('heightInput') as HTMLInputElement
-  const widthInput = document.getElementById('widthInput') as HTMLInputElement
-  if (!heightInput || !widthInput) throw new Error('Form inputs not found')
-  return `http://localhost:3000/images/${fileName}?height=${heightInput.value}&width=${widthInput.value}`
+  const heightInput = document.getElementById(
+    "heightInput",
+  ) as HTMLInputElement;
+  const widthInput = document.getElementById("widthInput") as HTMLInputElement;
+  if (!heightInput || !widthInput) throw new Error("Form inputs not found");
+  return `http://localhost:3000/images/${fileName}?height=${heightInput.value}&width=${widthInput.value}`;
 }
 
-fetch('http://localhost:3000/images/image-list')
+fetch("http://localhost:3000/images/image-list")
   .then((res: Response) => res.json())
   .then((files: string[]) => {
-    if (!gallery) throw new Error('Gallery element not found')
+    if (!gallery) throw new Error("Gallery element not found");
 
     files.forEach((file: string) => {
-      const card = document.createElement('div')
-      card.className = 'image-card'
+      const card = document.createElement("div");
+      card.className = "image-card";
 
-      const img = document.createElement('img')
-      img.src = `http://localhost:3000/images/${file}`
-      img.alt = file
+      const img = document.createElement("img");
+      img.src = `http://localhost:3000/images/${file}`;
+      img.alt = file;
 
-      const button = document.createElement('button')
-      button.className = 'resize-btn'
-      button.innerText = 'Resize'
-      button.onclick = () => openResizeForm(file)
+      const button = document.createElement("button");
+      button.className = "resize-btn";
+      button.innerText = "Resize";
+      button.onclick = (): void => openResizeForm(file);
 
-      card.appendChild(img)
-      card.appendChild(button)
-      gallery.appendChild(card)
-    })
-  })
+      card.appendChild(img);
+      card.appendChild(button);
+      gallery.appendChild(card);
+    });
+  });

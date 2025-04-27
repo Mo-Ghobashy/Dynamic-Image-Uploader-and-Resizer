@@ -1,13 +1,18 @@
 import { Request, Response, NextFunction } from "express";
+import { ParamsDictionary } from "express-serve-static-core";
+import { ParsedQs } from "qs";
 import { asyncWrapper } from "../middleware/asyncWrapper";
 import { appError } from "../utils/appError";
 import fs from "fs";
 import path from "path";
 import sharp from "sharp";
 import httpStatusText from "../utils/httpStatusText";
-import { upload } from "../middleware/upload";
 export const resizeImage = asyncWrapper(
-  async (req: Request, res: Response, next: NextFunction): Promise<any> => {
+  async (
+    req: Request<ParamsDictionary, unknown, unknown, ParsedQs>,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> => {
     const { fileName } = req.params;
     const width = parseInt(req.query.width as string);
     const height = parseInt(req.query.height as string);
@@ -18,15 +23,21 @@ export const resizeImage = asyncWrapper(
       "..",
       "images",
       "full",
-      `${fileName}`
+      `${fileName}`,
     );
+    console.log(inputPath);
+    if (!fs.existsSync(inputPath)) {
+      return next(
+        new appError("invalid images name", 400, httpStatusText.FAIL),
+      );
+    }
     const outputPath = path.join(
       __dirname,
       "..",
       "..",
       "images",
       "thumb",
-      `${width}x${height}-${fileName}`
+      `${width}x${height}-${fileName}`,
     );
     if (!width || !height) {
       return res.sendFile(inputPath);
@@ -42,10 +53,10 @@ export const resizeImage = asyncWrapper(
     } catch (error) {
       console.log(error);
       return next(
-        new appError("Image processing failed.", 500, httpStatusText.FAIL)
+        new appError("Image processing failed.", 500, httpStatusText.FAIL),
       );
     }
-  }
+  },
 );
 export const uploadImg = asyncWrapper(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
@@ -58,16 +69,16 @@ export const uploadImg = asyncWrapper(
       message: "Image uploaded successfully",
       filename: req.file.filename,
     });
-  }
+  },
 );
 export const getAllImages = asyncWrapper(
   async (_req: Request, res: Response, next: NextFunction): Promise<void> => {
     fs.readdir(path.join(process.cwd(), "images", "full"), (err, files) => {
       if (err)
         return next(
-          new appError("Failed to read folder", 500, httpStatusText.FAIL)
+          new appError("Failed to read folder", 500, httpStatusText.FAIL),
         );
       res.json(files);
     });
-  }
+  },
 );

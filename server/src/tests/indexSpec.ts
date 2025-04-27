@@ -15,7 +15,7 @@ describe("Upload an image", () => {
       "src",
       "tests",
       "tests-assets",
-      "1355112.jpeg"
+      "1355112.jpeg",
     );
     const res = await request(app)
       .post("/images/upload")
@@ -26,7 +26,7 @@ describe("Upload an image", () => {
         status: "Success",
         message: jasmine.any(String),
         filename: jasmine.any(String),
-      })
+      }),
     );
   });
   it("should return Error", async () => {
@@ -35,7 +35,7 @@ describe("Upload an image", () => {
       "src",
       "tests",
       "tests-assets",
-      "text.txt"
+      "text.txt",
     );
     const res = await request(app)
       .post("/images/upload")
@@ -47,7 +47,7 @@ describe("Upload an image", () => {
         status: "Fail",
         message: jasmine.any(String),
         code: 500,
-      })
+      }),
     );
   });
 });

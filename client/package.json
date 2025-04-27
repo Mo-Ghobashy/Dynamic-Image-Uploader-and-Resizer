@@ -4,8 +4,9 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
-    "prettier": "prettier --config .prettierrc dist/**/*.js --write",
-    "prettier:ts": "prettier --config .prettierrc src/**/*.ts --write"
+    "prettier": "prettier --config .prettierrc src/**/*.ts --write",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint --fix src/**/*.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,12 @@
     "@types/node": "^22.14.1",
     "prettier": "^3.5.3",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "@typescript-eslint/eslint-plugin": "^8.31.0",
+    "@typescript-eslint/parser": "^8.31.0",
+    "eslint": "^9.25.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-prettier": "^5.2.6",
+    "globals": "^13.24.0"
   }
 }

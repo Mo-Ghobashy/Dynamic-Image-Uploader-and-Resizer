@@ -4,8 +4,6 @@ import cors from "cors";
 import galleryRouter from "./routes/galleryRoute";
 import httpStatusText from "./utils/httpStatusText";
 import { appError } from "./utils/appError";
-import fs from "fs";
-import path from "path";
 dotenv.config();
 const app = express();
 const port = process.env.PORT;
@@ -25,7 +23,7 @@ app.use(
       message: error.message,
       code: error.statusCode,
     });
-  }
+  },
 );
 app.listen(port || 3000, () => {
   console.log(`server started at port ${port}`);

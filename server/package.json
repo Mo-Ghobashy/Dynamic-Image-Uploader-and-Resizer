@@ -6,10 +6,10 @@
     "build": "npx tsc",
     "start": "nodemon src/index.ts",
     "jasmine": "jasmine",
-    "prettier": "prettier --config .prettierrc dist/**/*.js --write",
-    "prettier:ts": "prettier --config .prettierrc src/**/*.ts --write",
+    "prettier": "prettier --config .prettierrc src/**/*.ts --write",
     "test": "npm run build && npm run jasmine",
-    "lint": "eslint src/**/*.ts"
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint --fix src/**/*.ts"
   },
   "keywords": [],
   "author": "",
