@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Image Gallery</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <h1>Image Gallery</h1>
+
+    <div id="gallery"></div>
+
+    <form id="uploadForm" enctype="multipart/form-data">
+      <h2>Upload a new image</h2>
+      <input
+        type="file"
+        name="image"
+        id="imageInput"
+        accept="image/*"
+        required
+      />
+      <br />
+      <button type="submit">Upload</button>
+    </form>
+    <div class="overlay" id="overlay" onclick="closeResizeForm()"></div>
+    <form class="floating-form" id="resizeForm">
+      <h3>Resize Image</h3>
+      <input type="number" placeholder="Enter width" id="widthInput" />
+      <input type="number" placeholder="Enter height" id="heightInput" />
+      <button type="submit">Submit</button>
+      <div id="generatedLink" class="hidden">
+        <input type="text" id="urlInput" readonly />
+        <button onclick="copyUrl()">Copy URL</button>
+      </div>
+    </form>
+    <script src="../dist/script.js"></script>
+  </body>
+</html>
