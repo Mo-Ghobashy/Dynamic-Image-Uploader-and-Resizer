@@ -25,7 +25,6 @@ export const resizeImage = asyncWrapper(
       "full",
       `${fileName}`,
     );
-    console.log(inputPath);
     if (!fs.existsSync(inputPath)) {
       return next(
         new appError("invalid images name", 400, httpStatusText.FAIL),

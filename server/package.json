@@ -4,9 +4,9 @@
   "main": "index.js",
   "scripts": {
     "build": "npx tsc",
-    "start": "nodemon src/index.ts",
+    "start": "tsc && node dist/index.js",
+    "dev": "nodemon --watch \"src/**/*.ts\" --exec \"npx ts-node\" src/index.ts",
     "jasmine": "jasmine",
-    "prettier": "prettier --config .prettierrc src/**/*.ts --write",
     "test": "npm run build && npm run jasmine",
     "lint": "eslint src/**/*.ts",
     "lint:fix": "eslint --fix src/**/*.ts"
