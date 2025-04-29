@@ -38,16 +38,15 @@ export const resizeImage = asyncWrapper(
       "thumb",
       `${width}x${height}-${fileName}`,
     );
+    console.log(inputPath, outputPath, height, width);
     if (!width || !height) {
       return res.sendFile(inputPath);
     }
     if (fs.existsSync(outputPath)) {
       return res.sendFile(outputPath);
     }
-
     try {
-      await sharp(inputPath).resize(width, height).toFile(outputPath);
-
+      await resize(inputPath, outputPath, width, height);
       res.sendFile(outputPath);
     } catch (error) {
       console.log(error);
@@ -57,6 +56,14 @@ export const resizeImage = asyncWrapper(
     }
   },
 );
+export const resize = async (
+  inputPath: string,
+  outputPath: string,
+  width: number,
+  height: number,
+): Promise<void> => {
+  await sharp(inputPath).resize(width, height).toFile(outputPath);
+};
 export const uploadImg = asyncWrapper(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     if (!req.file) {
