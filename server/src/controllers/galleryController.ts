@@ -16,7 +16,6 @@ export const resizeImage = asyncWrapper(
     const { fileName } = req.params;
     const width = parseInt(req.query.width as string);
     const height = parseInt(req.query.height as string);
-
     const inputPath = path.join(
       __dirname,
       "..",
@@ -25,11 +24,6 @@ export const resizeImage = asyncWrapper(
       "full",
       `${fileName}`,
     );
-    if (!fs.existsSync(inputPath)) {
-      return next(
-        new appError("invalid images name", 400, httpStatusText.FAIL),
-      );
-    }
     const outputPath = path.join(
       __dirname,
       "..",
@@ -38,7 +32,7 @@ export const resizeImage = asyncWrapper(
       "thumb",
       `${width}x${height}-${fileName}`,
     );
-    console.log(inputPath, outputPath, height, width);
+
     if (!width || !height) {
       return res.sendFile(inputPath);
     }
@@ -49,10 +43,10 @@ export const resizeImage = asyncWrapper(
       await resize(inputPath, outputPath, width, height);
       res.sendFile(outputPath);
     } catch (error) {
-      console.log(error);
-      return next(
-        new appError("Image processing failed.", 500, httpStatusText.FAIL),
-      );
+      if (error instanceof appError) {
+        return next(error);
+      }
+      new appError("Image processing failed.", 500, httpStatusText.FAIL);
     }
   },
 );
@@ -62,7 +56,19 @@ export const resize = async (
   width: number,
   height: number,
 ): Promise<void> => {
-  await sharp(inputPath).resize(width, height).toFile(outputPath);
+  if (!fs.existsSync(inputPath)) {
+    throw new appError("Input file does not exist", 400, httpStatusText.FAIL);
+  }
+  if (width <= 0 || height <= 0) {
+    throw new appError("Invalid dimensions", 400, httpStatusText.FAIL);
+  }
+  try {
+    await sharp(inputPath).resize(width, height).toFile(outputPath);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new appError(error.message, 500, httpStatusText.FAIL);
+    }
+  }
 };
 export const uploadImg = asyncWrapper(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {

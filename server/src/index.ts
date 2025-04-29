@@ -1,4 +1,4 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import galleryRouter from "./routes/galleryRoute";
@@ -16,7 +16,11 @@ app.all("*", (_req: Request, res: Response) => {
     message: "this route does not exist",
   });
 });
-app.use((error: appError, _req: Request, res: Response) => {
+app.use((error: appError, _req: Request, res: Response, next: NextFunction) => {
+  if (res.headersSent) {
+    return next(error);
+  }
+
   res.status(error.statusCode || 500).json({
     status: error.statusText || httpStatusText.ERROR,
     message: error.message,
