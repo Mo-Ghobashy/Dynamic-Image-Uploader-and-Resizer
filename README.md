@@ -3,7 +3,7 @@
 - most of frontend problems in because you maybe didnot start the api that provides images for the gallery make sure to start 2 servers toghether
 - add error on .png images upload
 - fixed eslint and prettier
-- i cant perform tests on my function because it doesnot take any parameters so it is tested by a request
+- tests made for image prossing functions and api end points
 
 # Dynamic Image Uploader and Resizer
 
