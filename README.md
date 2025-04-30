@@ -92,7 +92,7 @@ npm install
 ### 9. Build the front end
 
 ```bash
-npm npm run build
+npm run build
 ```
 
 ### 10. Start the frontend
