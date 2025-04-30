@@ -89,7 +89,13 @@ cd ../client
 npm install
 ```
 
-### 9. Start the frontend
+### 9. Build the front end
+
+```bash
+npm npm run build
+```
+
+### 10. Start the frontend
 
 Open client/index.html with Live Server extension in VSCode
 or
