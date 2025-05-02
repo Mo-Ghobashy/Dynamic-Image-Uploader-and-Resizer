@@ -41,7 +41,11 @@ export const resizeImage = asyncWrapper(
     }
     try {
       await resize(inputPath, outputPath, width, height);
-      res.sendFile(outputPath);
+      res.sendFile(outputPath, (err) => {
+        if (err) {
+          next(new appError("Failed to send file", 500, httpStatusText.FAIL));
+        }
+      });
     } catch (error) {
       if (error instanceof appError) {
         return next(error);
