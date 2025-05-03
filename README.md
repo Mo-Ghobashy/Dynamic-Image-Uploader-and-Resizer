@@ -1,10 +1,3 @@
-## Reviewer Notes
-
-- most of frontend problems in because you maybe didnot start the api that provides images for the gallery make sure to start 2 servers toghether
-- add error on .png images upload
-- fixed eslint and prettier
-- tests made for image prossing functions and api end points
-
 # Dynamic Image Uploader and Resizer
 
 This project provides placeholder image generation with resizing capabilities via a REST API.
@@ -97,7 +90,7 @@ npm run build
 
 ### 10. Start the frontend
 
-Open client/index.html with Live Server extension in VSCode
+Open client/index.html with Live Server extension in VSCode (Make sure to turn off auto refresh)
 or
 
 Open the index.html file manually in your browser.

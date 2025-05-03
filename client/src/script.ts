@@ -23,6 +23,7 @@ async function checkServerStatus(): Promise<boolean> {
   }
 }
 let fileName: string = "";
+const allowedImgTypes = ["image/jpeg", "image/png", "image/gif", "image/webp"];
 document.addEventListener("DOMContentLoaded", () => {
   form?.addEventListener("submit", (event: Event) => {
     event.preventDefault();
@@ -39,11 +40,19 @@ document.addEventListener("DOMContentLoaded", () => {
       alert("Please select a file first!");
       return;
     }
-
-    const formData = new FormData();
-    formData.append("image", file);
-
+    console.log(file.type);
     try {
+      if (!allowedImgTypes.includes(file.type)) {
+        alert("Invalid file extension");
+        return;
+      }
+      const formData = new FormData();
+      formData.append("image", file);
+      const list = await fetch("http://localhost:3000/images/image-list");
+      const imagesList: string[] = await list.json();
+      if (imagesList.find((img) => img === file.name)) {
+        return alert("image already exists");
+      }
       const res: Response = await fetch("http://localhost:3000/images/upload", {
         method: "POST",
         body: formData,
@@ -54,15 +63,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const data = await res.json();
-      console.log("Upload success:", data);
-      debugger;
+
       createCard(data.filename);
-      debugger;
+
       if (fileInput) {
         fileInput.value = "";
       }
-    } catch (err) {
-      console.error("Upload failed:", err);
+    } catch (innerError) {
+      console.error("Error after upload:", innerError);
     }
   });
 

@@ -4,7 +4,7 @@ import { Request, Response, NextFunction } from "express";
 import { appError } from "../utils/appError";
 import httpStatusText from "../utils/httpStatusText";
 import { asyncWrapper } from "./asyncWrapper";
-
+import allowedMimeTypes from "../utils/allowedMimeTypes";
 const storage = multer.diskStorage({
   destination: function (
     _req: Express.Request,
@@ -26,10 +26,16 @@ const fileFilter = (
   file: Express.Multer.File,
   cb: FileFilterCallback,
 ): void => {
-  if (file.mimetype.split("/")[0] == "image") {
+  if (allowedMimeTypes.includes(file.mimetype)) {
     return cb(null, true);
   } else {
-    return cb(new appError("Must be an img", 500, httpStatusText.FAIL));
+    return cb(
+      new appError(
+        "Must be an img with expected mimetype",
+        500,
+        httpStatusText.FAIL,
+      ),
+    );
   }
 };
 export const upload = multer({ storage: storage, fileFilter: fileFilter });
@@ -39,7 +45,7 @@ export const uploadMiddleware = asyncWrapper(
 
     multerUpload(req, res, (err) => {
       if (err) {
-        next(new appError("Must be an img", 500, httpStatusText.FAIL));
+        next(new appError(err.message, 500, httpStatusText.FAIL));
         return;
       }
       next();
